@@ -2,13 +2,12 @@ package com.example.imagecarousel
 
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.imagecarousel.databinding.CarouselItemBinding
 
 
-class CarouselAdapter(val itemClick: (position:Int,item:Item) -> Unit) : RecyclerView.Adapter<ItemViewHolder>() {
+class CarouselAdapter() : RecyclerView.Adapter<ItemViewHolder>() {
 
     private var items: List<Item> = listOf()
 
@@ -26,9 +25,6 @@ class CarouselAdapter(val itemClick: (position:Int,item:Item) -> Unit) : Recycle
 
     override fun onBindViewHolder(holder: ItemViewHolder, position: Int) {
         holder.bind(items[position])
-        holder.itemView.setOnClickListener {
-            itemClick(position,items[position])
-        }
     }
 
     override fun getItemCount() = items.size

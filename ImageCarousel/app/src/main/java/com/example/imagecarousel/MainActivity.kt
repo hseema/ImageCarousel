@@ -3,33 +3,19 @@ package com.example.imagecarousel
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import android.view.View
 import android.widget.Toast
 import com.example.imagecarousel.databinding.ActivityMainBinding
 import androidx.recyclerview.widget.RecyclerView
-
 import androidx.lifecycle.ViewModelProvider
-
 import androidx.appcompat.widget.SearchView
 import androidx.recyclerview.widget.LinearLayoutManager
-
-
-
-
-
-
-
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding:ActivityMainBinding
     private lateinit var listAdapter: ListItemAdapter
     private lateinit var viewModel: CarouselViewModel
-    private val itemAdapter by lazy {
-        CarouselAdapter { position: Int, item: Item ->
-            //Toast.makeText(this@MainActivity, "Pos ${position}", Toast.LENGTH_LONG).show()
-            binding.carouselView.smoothScrollToPosition(position)
-        } }
+    private lateinit var itemAdapter:CarouselAdapter
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -39,9 +25,11 @@ class MainActivity : AppCompatActivity() {
         setContentView(view)
         viewModel = ViewModelProvider(this).get(CarouselViewModel::class.java)
 
-        binding.carouselView.initialize(itemAdapter)
-        binding.carouselView.setViewsToChangeColor(listOf(R.id.list_item_background, R.id.list_item_text))
+        binding.carouselView.layoutManager =
+            LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
+        itemAdapter = CarouselAdapter()
         itemAdapter.setItems(viewModel.getItemListForCarousel())
+        binding.carouselView.adapter = itemAdapter
 
 
         //for search view
@@ -54,11 +42,10 @@ class MainActivity : AppCompatActivity() {
             .addOnScrollListener(object : RecyclerView.OnScrollListener() {
                 override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
                     super.onScrollStateChanged(recyclerView, newState)
-                    if(newState == RecyclerView.SCROLL_STATE_SETTLING) {
+                    if(newState == RecyclerView.SCROLL_STATE_IDLE) {
                         val pos: Int =
                             (recyclerView.layoutManager as LinearLayoutManager).findFirstVisibleItemPosition()
                         changeInfoList(pos)
-                        Log.i("Carousel_POS", "position is " + pos)
                     }
                 }
             })
@@ -88,18 +75,18 @@ class MainActivity : AppCompatActivity() {
 
     private fun filter(text: String?) {
 
-        val filteredlist: ArrayList<Item> = ArrayList()
+        val filteredList: ArrayList<Item> = ArrayList()
 
         for (item in viewModel.getInfoListToSearch()) {
             // checking if the entered string matched with any item of our recycler view.
             if (item.title.lowercase().contains(text!!.lowercase())) {
-                filteredlist.add(item)
+                filteredList.add(item)
             }
         }
-        if (filteredlist.isEmpty()) {
+        if (filteredList.isEmpty()) {
             Toast.makeText(this, "No Data Found..", Toast.LENGTH_SHORT).show()
         } else {
-            listAdapter.setList(filteredlist)
+            listAdapter.setList(filteredList)
         }
     }
 
