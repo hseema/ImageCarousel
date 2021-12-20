@@ -54,9 +54,12 @@ class MainActivity : AppCompatActivity() {
             .addOnScrollListener(object : RecyclerView.OnScrollListener() {
                 override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
                     super.onScrollStateChanged(recyclerView, newState)
-                    val pos:Int = (recyclerView.layoutManager as LinearLayoutManager).findFirstVisibleItemPosition()
-                    changeInfoList(pos)
-                    Log.i("Carousel_POS","position is "+pos)
+                    if(newState == RecyclerView.SCROLL_STATE_SETTLING) {
+                        val pos: Int =
+                            (recyclerView.layoutManager as LinearLayoutManager).findFirstVisibleItemPosition()
+                        changeInfoList(pos)
+                        Log.i("Carousel_POS", "position is " + pos)
+                    }
                 }
             })
     }
