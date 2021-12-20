@@ -77,6 +77,8 @@ class CarouselViewModel:ViewModel(){
         }
     }
 
+    fun getCarouselPosition() = carouselPosition
+
     fun getInfoListToSearch():List<Item> {
         return getInfoListForCarousel(carouselPosition)
     }

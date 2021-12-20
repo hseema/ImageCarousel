@@ -2,13 +2,14 @@ package com.example.imagecarousel
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.widget.Toast
 import com.example.imagecarousel.databinding.ActivityMainBinding
 import androidx.recyclerview.widget.RecyclerView
 import androidx.lifecycle.ViewModelProvider
 import androidx.appcompat.widget.SearchView
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.PagerSnapHelper
+import androidx.recyclerview.widget.SnapHelper
 
 class MainActivity : AppCompatActivity() {
 
@@ -30,7 +31,8 @@ class MainActivity : AppCompatActivity() {
         itemAdapter = CarouselAdapter()
         itemAdapter.setItems(viewModel.getItemListForCarousel())
         binding.carouselView.adapter = itemAdapter
-
+        val snapHelper: SnapHelper = PagerSnapHelper()
+        snapHelper.attachToRecyclerView(binding.carouselView)
 
         //for search view
         initSearchView()
@@ -52,8 +54,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun changeInfoList(pos: Int) {
-        listAdapter.setList(viewModel.getInfoListForCarousel(pos))
-
+        if(pos != viewModel.getCarouselPosition())
+            listAdapter.setList(viewModel.getInfoListForCarousel(pos))
     }
 
     private fun initSearchView() {
@@ -93,9 +95,8 @@ class MainActivity : AppCompatActivity() {
     private fun initInfoRecyclerView(){
         binding.infoList.layoutManager = LinearLayoutManager(this)
         listAdapter = ListItemAdapter()
-        listAdapter.setList(viewModel.getInfoListForCarousel(0))
+        listAdapter.setList(viewModel.getInfoListForCarousel(viewModel.getCarouselPosition()))
         binding.infoList.adapter = listAdapter
     }
 
 }
-
