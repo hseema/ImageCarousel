@@ -33,6 +33,7 @@ class MainActivity : AppCompatActivity() {
         binding.carouselView.adapter = itemAdapter
         val snapHelper: SnapHelper = PagerSnapHelper()
         snapHelper.attachToRecyclerView(binding.carouselView)
+        binding.carouselView.addItemDecoration(CirclePagerIndicatorDecoration())
 
         //for search view
         initSearchView()
